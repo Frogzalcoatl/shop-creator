@@ -38,8 +38,9 @@ Now that you have set everything up, you should configure the project to make it
 1. Depending on who or what you are, you may want to change the license. I have the template itself as MIT. Feel free to change it to whatever if your business needs something specific or if you want your project to be AGPL or something.
 2. Edit ``pack_icon.png`` to be something else. It can be any resolution, as long as it is a square. I recommend 256x256 personally.
 3. In ``manifest.json`` change the header's description and name to something appropriate for your project. I wouldn't mind being credited there but know you aren't required to do so.
-4. If your project is likely bug-free, consider enabling ``minify`` in ``esbuild.cjs`` to enable minification. This will sacrafice readability (and debugability) to save A LOT of storage space and possibly make your code more runtime performant.
-5. That's it I think I have bad memory.
+4. Also in ``manifest.json`` change all 3 of the the UUIDs with new unique ones. You can generate them quickly [here](https://www.uuidgenerator.net/).
+5. If your project is likely bug-free, consider enabling ``minify`` in ``esbuild.cjs`` to enable minification. This will sacrafice readability (and debugability) to save A LOT of storage space and possibly make your code more runtime performant.
+6. That's it I think I have bad memory.
 
 ## Notes
 - This project is already set up to use the stable version of gametest scripting modules. If you want to switch to beta, there is nothing stopping you. Just make sure to update both the version in package.json and manifest.json
