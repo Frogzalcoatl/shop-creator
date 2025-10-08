@@ -29,6 +29,7 @@
 		{
 			"description": "Scripting Module",
 			"type": "script",
+			"language": "javascript",
 			"uuid": "785762b9-6e55-46a3-bc2f-ec983a3927e2",
 			"version": [
 				1,
