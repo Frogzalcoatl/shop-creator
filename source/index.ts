@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
 
-world.afterEvents.worldLoad.subscribe(function (): void {
+world.afterEvents.worldLoad.subscribe((): void => {
 	world.sendMessage("Hello World.");
 });
