@@ -13,7 +13,7 @@ const options = {
 	minify: false,
 	outfile: "scripts/index.esm.js",
 	platform: "neutral",
-	sourcemap: true,
+	sourcemap: false,
 	sourcesContent: false,
 	target: "es2023",
 };
