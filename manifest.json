@@ -11,17 +11,17 @@
 	],
 	"format_version": 2,
 	"header": {
-		"description": "Made with moderate amounts of care.",
+		"description": "By Frogzalcoatl. With major help from SunnyTheFennec \"xskt\".",
 		"min_engine_version": [26, 21],
-		"name": "Gametest Starter Addon",
-		"uuid": "f15047db-ad9d-4dc8-9b5e-88bcaa0666df",
+		"name": "Shop Creator",
+		"uuid": "3301cfbd-f9a3-4516-8591-05ec18dec198",
 		"version": [2, 0, 0]
 	},
 	"modules": [
 		{
 			"description": "Addon Module",
 			"type": "data",
-			"uuid": "335a6ee7-c060-426b-bee1-28752ed2e6f8",
+			"uuid": "21767fb9-75ff-457d-91f3-5c393a17b25d",
 			"version": [1, 0, 0]
 		},
 		{
@@ -29,7 +29,7 @@
 			"entry": "scripts/index.esm.js",
 			"language": "javascript",
 			"type": "script",
-			"uuid": "785762b9-6e55-46a3-bc2f-ec983a3927e2",
+			"uuid": "c1fb47db-5a3e-4a76-929f-480984ae6de8",
 			"version": [1, 0, 0]
 		}
 	]

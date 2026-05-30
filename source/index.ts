@@ -1,5 +1,3 @@
-import { world } from "@minecraft/server";
+import "./commands";
 
-world.afterEvents.worldLoad.subscribe((): void => {
-	world.sendMessage("Hello World.");
-});
+// Frogzalcoatl's Shop Creator (FSC)
