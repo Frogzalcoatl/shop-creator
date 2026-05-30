@@ -19,7 +19,8 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"stripInternal": true,
-		"target": "es2023"
+		"target": "es2023",
+		"types": []
 	},
 	"exclude": ["scripts", "node_modules"],
 	"include": ["source"]

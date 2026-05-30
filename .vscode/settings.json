@@ -25,5 +25,12 @@
 	"files.insertFinalNewline": true,
 	"files.trimFinalNewlines": true,
 	"files.trimTrailingWhitespace": true,
+	"js/ts.preferences.autoImportSpecifierExcludeRegexes": [
+		"^@biomejs/biome",
+		"^rimraf",
+		"^archiver",
+		"^esbuild",
+		"^typescript"
+	],
 	"terminal.integrated.cwd": "./"
 }
