@@ -12,10 +12,10 @@
 	"format_version": 2,
 	"header": {
 		"description": "By Frogzalcoatl. With major help from SunnyTheFennec \"xskt\".",
-		"min_engine_version": [26, 21],
+		"min_engine_version": [1, 26, 21],
 		"name": "Shop Creator",
 		"uuid": "3301cfbd-f9a3-4516-8591-05ec18dec198",
-		"version": [2, 0, 0]
+		"version": [1, 0, 0]
 	},
 	"modules": [
 		{
