@@ -4,11 +4,12 @@ import {
 	type CustomCommandOrigin,
 	type CustomCommandResult,
 	EntityComponentTypes,
+	ItemStack,
 	ItemTypes,
 	type Player,
 	system,
 } from "@minecraft/server";
-import { FSC_FORMS } from "./forms";
+import { giveItem } from "./itemUtils";
 
 const COMMANDS: {
 	command: CustomCommand;
@@ -25,7 +26,9 @@ COMMANDS.push({
 		const item = ItemTypes.get("gold_ingot");
 		if (inventory && item) {
 			system.run(() => {
-				FSC_FORMS.operator.mainMenu(player);
+				player.sendMessage(
+					giveItem(player, inventory.container, new ItemStack(item), 1000).message,
+				);
 			});
 		}
 		return undefined;

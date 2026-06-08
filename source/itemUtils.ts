@@ -1,11 +1,14 @@
 import "@minecraft/server";
-import type { Container, Entity, ItemStack, ItemType, Player, Vector2 } from "@minecraft/server";
+import {
+	type Container,
+	type ItemStack,
+	type ItemType,
+	type Player,
+	world,
+} from "@minecraft/server";
 
 // Capitalize makes the first letter of each word uppercase.
-export function removeNamespaceAndUnderscores(
-	str: string,
-	capitalize: boolean
-): string {
+export function removeNamespaceAndUnderscores(str: string, capitalize: boolean): string {
 	const namespaceColonIndex: number = str.indexOf(":");
 	if (namespaceColonIndex !== -1) {
 		str = str.slice(namespaceColonIndex + 1);
@@ -69,7 +72,7 @@ export function hasItemAmount(
 export function clearItem(
 	container: Container,
 	item: ItemType,
-	amountToClear?: number
+	amountToClear?: number,
 ): { bool: boolean; message: string } {
 	if (amountToClear === 0) {
 		return {
@@ -129,14 +132,13 @@ export function clearItem(
 	if (amountLeft !== 0) {
 		return {
 			bool: false,
-			message: `Did not clear intended amount of ${removeNamespaceAndUnderscores(item.id, true)}. (amountLeftToClear = ${amountLeft})`
-		}
+			message: `Did not clear intended amount of ${removeNamespaceAndUnderscores(item.id, true)}. (amountLeftToClear = ${amountLeft})`,
+		};
 	}
 
 	return {
 		bool: true,
-		message:
-			`Cleared ${amountToClear}x ${removeNamespaceAndUnderscores(item.id, true)}`
+		message: `Cleared ${amountToClear}x ${removeNamespaceAndUnderscores(item.id, true)}`,
 	};
 }
 
@@ -160,18 +162,20 @@ export function giveItem(
 	}
 
 	// Items should be spawned as entities
+	world.sendMessage(`X Rotation: ${player.getRotation().x}`);
 	while (amountLeft > 0) {
-		itemStack.amount = Math.min(itemStack.maxAmount, amountLeft);
-		const itemEntity: Entity = player.dimension.spawnItem(itemStack, player.location);
-		// Apply impulse as if the player is dropping the item.
-		if (itemEntity.isValid) {
-			const playerRotation: Vector2 = player.getRotation();
-			itemEntity.applyImpulse({
-				x: playerRotation.x,
-				y: 1,
-				z: playerRotation.y
-			})
+		if (!player.isValid) {
+			return {
+				bool: false,
+				message: `Only able to give ${player.name} ${amountToGive - amountLeft}/${amountToGive} ${removeNamespaceAndUnderscores(itemStack.type.id, true)}. Unable to spawn items on invalid player.`,
+			};
 		}
+		itemStack.amount = Math.min(itemStack.maxAmount, amountLeft);
+		player.dimension.spawnItem(itemStack, {
+			x: player.location.x,
+			y: player.location.y + 1,
+			z: player.location.z,
+		});
 		amountLeft -= itemStack.amount;
 	}
 
