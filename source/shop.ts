@@ -4,74 +4,46 @@ import { ShopOfferCategory } from "./shopOffer";
 
 export class Shop {
 	public name: string;
-	private categories: ShopOfferCategory[];
+	private _categories: ShopOfferCategory[];
 
 	// Non categorized offers that appear on the main menu of shop ui
 	private globalCategory: ShopOfferCategory;
 
-	// Incremented when shop is updated to prevent ui mismatch purchases when shop content is updated
-	private version: number;
+	// Value updated with Date.now() when shop is edited to prevent ui mismatch purchases
+	private editTimestamp: number;
 
 	constructor(name: string) {
 		this.name = name;
-		this.categories = [];
+		this._categories = [];
 		this.globalCategory = new ShopOfferCategory("Global");
-		this.version = 1;
+		this.editTimestamp = Date.now();
 	}
 
-	public removeCategory(index: number): ShopOfferCategory | undefined {
-		if (index >= this.categories.length || index < 0) {
-			return undefined;
+	public getCategoriesArr(updateEditTimestamp: boolean = true): ShopOfferCategory[] {
+		if (updateEditTimestamp) {
+			this.editTimestamp = Date.now();
 		}
-		this.version++;
-		return this.categories.splice(index, 1)[0];
+		return this._categories;
 	}
 
-	public addCategory(category: ShopOfferCategory): void {
-		this.version++;
-		this.categories.push(category);
-	}
-
-	public swapCategories(index1: number, index2: number): boolean {
-		if (
-			index1 < 0 ||
-			index1 >= this.categories.length ||
-			index2 < 0 ||
-			index2 >= this.categories.length ||
-			index1 === index2
-		) {
-			return false;
+	public getGlobalCategory(updateEditTimestamp: boolean = true): ShopOfferCategory {
+		if (updateEditTimestamp) {
+			this.editTimestamp = Date.now();
 		}
-		const temp = this.categories[index1];
-		this.categories[index1] = this.categories[index2];
-		this.categories[index2] = temp;
-		this.version++;
-		return true;
-	}
-
-	// Dont forget to update this.version
-	// -1 for global category
-	public getCategory(index: number): ShopOfferCategory | undefined {
-		if (index === -1) {
-			return this.globalCategory;
-		}
-		if (index < 0 || index >= this.categories.length) {
-			return undefined;
-		}
-		return this.categories[index];
+		return this.globalCategory;
 	}
 
 	public async showForm(viewer: Player, inventory: EntityInventoryComponent): Promise<void> {
 		const form = new ActionFormData();
 		form.title(this.name);
-		for (const category of this.categories) {
+		for (const category of this._categories) {
 			form.button(category.name);
 		}
 		for (const offer of this.globalCategory.offers) {
 			offer.addToForm(form, inventory);
 		}
 
-		const versionShown = this.version;
+		const versionShown = this.editTimestamp;
 
 		const result = await form.show(viewer);
 		if (result.canceled || result.selection === undefined) {
@@ -79,7 +51,7 @@ export class Shop {
 		}
 
 		// Shop content has been changed since viewer triggered form.show()
-		if (this.version !== versionShown) {
+		if (this.editTimestamp !== versionShown) {
 			viewer.sendMessage(
 				"Unable to purchase item. Shop content has been changed by an operator.",
 			);
