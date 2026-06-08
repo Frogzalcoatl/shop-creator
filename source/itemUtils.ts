@@ -1,26 +1,21 @@
 import "@minecraft/server";
-import {
-	type Container,
-	type ItemStack,
-	type ItemType,
-	type Player,
-	world,
-} from "@minecraft/server";
+import type { Container, ItemStack, ItemType, Player } from "@minecraft/server";
 
-// Capitalize makes the first letter of each word uppercase.
-export function removeNamespaceAndUnderscores(str: string, capitalize: boolean): string {
-	const namespaceColonIndex: number = str.indexOf(":");
+export function prettyTypeId(typeId: string): string {
+	const namespaceColonIndex: number = typeId.indexOf(":");
 	if (namespaceColonIndex !== -1) {
-		str = str.slice(namespaceColonIndex + 1);
+		typeId = typeId.slice(namespaceColonIndex + 1);
 	}
-	if (capitalize) {
-		const words: string[] = str.split("_");
-		for (let i = 0; i < words.length; i++) {
-			words[i] = `${words[i][0].toUpperCase()}${words[i].slice(1)}`;
+	const words: string[] = typeId.split("_");
+	for (let i = 0; i < words.length; i++) {
+		const word = words[i];
+		if (!word) {
+			continue;
 		}
-		str = words.join(" ");
+		words[i] = `${word.toUpperCase()}${word.slice(1)}`;
 	}
-	return str;
+	typeId = words.join(" ");
+	return typeId;
 }
 
 // Determines whether a container has at least x amount of item type. Returns array of slot ids containing item type.
@@ -77,7 +72,7 @@ export function clearItem(
 	if (amountToClear === 0) {
 		return {
 			bool: true,
-			message: `Cleared 0 ${removeNamespaceAndUnderscores(item.id, true)} (as requested)`,
+			message: `Cleared 0 ${prettyTypeId(item.id)} (as requested)`,
 		};
 	}
 	if (amountToClear !== undefined && amountToClear < 0) {
@@ -90,7 +85,7 @@ export function clearItem(
 	if (!hasItemAmountResult.bool) {
 		return {
 			bool: false,
-			message: `Not enough ${removeNamespaceAndUnderscores(item.id, true)}`,
+			message: `Not enough ${prettyTypeId(item.id)}`,
 		};
 	}
 	const inSlots: number[] = hasItemAmountResult.inSlots;
@@ -108,7 +103,7 @@ export function clearItem(
 		}
 		return {
 			bool: true,
-			message: `Cleared all instances of ${removeNamespaceAndUnderscores(item.id, true)}`,
+			message: `Cleared all instances of ${prettyTypeId(item.id)}`,
 		};
 	}
 
@@ -132,13 +127,13 @@ export function clearItem(
 	if (amountLeft !== 0) {
 		return {
 			bool: false,
-			message: `Did not clear intended amount of ${removeNamespaceAndUnderscores(item.id, true)}. (amountLeftToClear = ${amountLeft})`,
+			message: `Did not clear intended amount of ${prettyTypeId(item.id)}. (amountLeftToClear = ${amountLeft})`,
 		};
 	}
 
 	return {
 		bool: true,
-		message: `Cleared ${amountToClear}x ${removeNamespaceAndUnderscores(item.id, true)}`,
+		message: `Cleared ${amountToClear}x ${prettyTypeId(item.id)}`,
 	};
 }
 
@@ -162,12 +157,11 @@ export function giveItem(
 	}
 
 	// Items should be spawned as entities
-	world.sendMessage(`X Rotation: ${player.getRotation().x}`);
 	while (amountLeft > 0) {
 		if (!player.isValid) {
 			return {
 				bool: false,
-				message: `Only able to give ${player.name} ${amountToGive - amountLeft}/${amountToGive} ${removeNamespaceAndUnderscores(itemStack.type.id, true)}. Unable to spawn items on invalid player.`,
+				message: `Only able to give ${player.name} ${amountToGive - amountLeft}/${amountToGive} ${prettyTypeId(itemStack.type.id)}. Unable to spawn items on invalid player.`,
 			};
 		}
 		itemStack.amount = Math.min(itemStack.maxAmount, amountLeft);
@@ -181,6 +175,6 @@ export function giveItem(
 
 	return {
 		bool: true,
-		message: `Gave ${player.name} ${amountToGive} ${removeNamespaceAndUnderscores(itemStack.type.id, true)}`,
+		message: `Gave ${player.name} ${amountToGive} ${prettyTypeId(itemStack.type.id)}`,
 	};
 }

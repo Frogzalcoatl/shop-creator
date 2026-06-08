@@ -1,6 +1,6 @@
 import type { EntityInventoryComponent, ItemStack, Player } from "@minecraft/server";
 import type { ActionFormData } from "@minecraft/server-ui";
-import { clearItem, giveItem, hasItemAmount, removeNamespaceAndUnderscores } from "./itemUtils";
+import { clearItem, giveItem, hasItemAmount, prettyTypeId } from "./itemUtils";
 
 export class ShopOffer {
 	constructor(
@@ -15,18 +15,18 @@ export class ShopOffer {
 		inventory: EntityInventoryComponent,
 	): { bool: boolean; message: string } {
 		const hasItemAmountResult = hasItemAmount(
-			inventory,
+			inventory.container,
 			this.priceItem.type,
 			this.priceItemAmount,
 		);
 		if (!hasItemAmountResult.bool) {
 			return {
 				bool: false,
-				message: `Not enough ${removeNamespaceAndUnderscores(this.priceItem.typeId, true, true)}`,
+				message: `Not enough ${prettyTypeId(this.priceItem.typeId)}`,
 			};
 		}
-		clearItem(inventory, this.priceItem.type, this.priceItemAmount);
-		const result = giveItem(player, inventory, this.item, this.itemAmount);
+		clearItem(inventory.container, this.priceItem.type, this.priceItemAmount);
+		const result = giveItem(player, inventory.container, this.item, this.itemAmount);
 		return {
 			bool: true,
 			message: result.message,
@@ -35,13 +35,13 @@ export class ShopOffer {
 
 	public addToForm(form: ActionFormData, inventory: EntityInventoryComponent): void {
 		const hasItemAmountResult = hasItemAmount(
-			inventory,
+			inventory.container,
 			this.priceItem.type,
 			this.priceItemAmount,
 		);
 		form.button(
-			`§l${this.itemAmount}x ${this.item.nameTag ?? removeNamespaceAndUnderscores(this.item.type.id, true, true)}
-			§r${hasItemAmountResult.bool ? "§a" : "§c"}${this.priceItemAmount} ${this.priceItem.nameTag ?? removeNamespaceAndUnderscores(this.priceItem.type.id, true, true)}`,
+			`§l${this.itemAmount}x ${this.item.nameTag ?? prettyTypeId(this.item.type.id)}
+			§r${hasItemAmountResult.bool ? "§a" : "§c"}${this.priceItemAmount} ${this.priceItem.nameTag ?? prettyTypeId(this.priceItem.type.id)}`,
 		);
 	}
 }
